@@ -76,6 +76,17 @@ check_memory() {
 }
 
 # -------------------------------
+# Function to show top processes
+# -------------------------------
+
+show_top_processes() {
+    echo
+    echo "--- TOP CPU-CONSUMING PROCESSES ---"
+
+    ps -eo pid,comm,%cpu,%mem --sort=-%cpu | head -n 6
+}
+
+# -------------------------------
 # Main program
 # -------------------------------
 
@@ -84,6 +95,7 @@ clear
 print_header
 check_disk
 check_memory
+show_top_processes
 
 echo "=================================================="
 echo "Monitoring completed."
