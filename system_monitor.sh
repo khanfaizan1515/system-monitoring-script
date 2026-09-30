@@ -1,13 +1,21 @@
 #!/bin/bash
+
 # ==========================================================
 # System Monitoring and Alerting Script
 # Author: Faizan
 # ==========================================================
 
-# Disk usage threshold
-DISK_THRESHOLD=80
+# -------------------------------
+# Configuration
+# -------------------------------
 
+DISK_THRESHOLD=80
+MEMORY_THRESHOLD=80
+
+# -------------------------------
 # Function to display header
+# -------------------------------
+
 print_header() {
     echo "=================================================="
     echo "       SYSTEM MONITORING AND ALERTING SYSTEM"
@@ -17,7 +25,10 @@ print_header() {
     echo "=================================================="
 }
 
+# -------------------------------
 # Function to check disk usage
+# -------------------------------
+
 check_disk() {
     echo
     echo "--- DISK USAGE ---"
@@ -40,11 +51,39 @@ check_disk() {
     done
 }
 
+# -------------------------------
+# Function to check memory usage
+# -------------------------------
+
+check_memory() {
+    echo
+    echo "--- MEMORY USAGE ---"
+
+    total_memory=$(free | awk '/Mem:/ {print $2}')
+    used_memory=$(free | awk '/Mem:/ {print $3}')
+
+    memory_usage=$((used_memory * 100 / total_memory))
+
+    echo "Total Memory: ${total_memory} KB"
+    echo "Used Memory: ${used_memory} KB"
+    echo "Memory Usage: ${memory_usage}%"
+
+    if [ "$memory_usage" -ge "$MEMORY_THRESHOLD" ]; then
+        echo "WARNING: Memory usage is above ${MEMORY_THRESHOLD}%!"
+    else
+        echo "Status: OK"
+    fi
+}
+
+# -------------------------------
 # Main program
+# -------------------------------
+
 clear
 
 print_header
 check_disk
+check_memory
 
 echo "=================================================="
 echo "Monitoring completed."
